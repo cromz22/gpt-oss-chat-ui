@@ -17,11 +17,11 @@
 
 ## Quick Start
 
-1. Launch the CLI in single-turn mode (Responses API):
+1. Launch the CLI with conversational memory (Chat Completions API):
    ```bash
-   uv run chat_cli.py --responses
+   uv run chat_cli.py
    ```
-2. Omit `--responses` to use the Chat Completions API with conversation memory. Replies print once the assistant finishes the turn.
+2. Add `--responses` to switch to the stateless Responses API. Replies print once the assistant finishes the turn.
 3. Use `/exit` (or `Ctrl+C`) to leave the session when you are done.
 
 ## CLI Options
@@ -30,7 +30,7 @@
 - `--model`: Choose the model to query (defaults to `VLLM_MODEL` or `openai/gpt-oss-120b`).
 - `--system`: Provide the initial system prompt. When `--responses` is disabled, the prompt is sent as the first chat message.
 - `--transcript`: Load an existing JSON transcript before chatting and write the updated transcript on exit.
-- `--responses`: Route requests through the Responses API for safer, non-streaming single-turn interactions.
+- `--responses`: Route requests through the Responses API for safer, non-streaming single-turn interactions. This mode ignores prior turns and is ideal for quick, stateless checks. Without the flag, the CLI uses Chat Completions and keeps the running conversation history.
 
 ## In-Session Commands
 
