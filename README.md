@@ -43,7 +43,7 @@ Once the banner appears you can type messages or use the built-in commands:
 
 ## Transcript Workflow
 
-Pass `--transcript <path>` to continue from a saved conversation. The CLI loads the previous messages at startup and will overwrite the file with the latest transcript when you exit cleanly. You can also use `/save` at any point to snapshot the conversation to a different file, making it easy to collect sample transcripts (ignored by Git thanks to the `gpt_oss_chat_*.json` pattern).
+Pass `--transcript <path>` to continue from a saved conversation. The CLI loads the previous messages at startup and will overwrite the file with the latest transcript when you exit cleanly. You can also use `/save` at any point to snapshot the conversation to a different file; transcripts default to `outputs/`, which Git ignores.
 By default, new transcripts are written under the `outputs/` directory so they remain separate from source files.
 
 ## Additional Tips
