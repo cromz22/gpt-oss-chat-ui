@@ -17,11 +17,10 @@
 
 ## Quick Start
 
-1. Launch the CLI in single-turn mode to avoid streaming quirks currently seen with GPT-OSS:
+1. Launch the CLI in chat mode:
    ```bash
    uv run chat_cli.py --responses
    ```
-2. Drop `--responses` to use the Chat Completions API instead. Add `--no-stream` if you want full responses printed after each turn.
 3. Use `/exit` (or `Ctrl+C`) to leave the session when you are done.
 
 ## CLI Options
