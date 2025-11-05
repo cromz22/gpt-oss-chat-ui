@@ -38,12 +38,13 @@ Once the banner appears you can type messages or use the built-in commands:
 
 - `/reset` clears the conversation state (the system prompt is re-applied when relevant).
 - `/system <text>` updates the system prompt mid-session.
-- `/save <path>` writes the current transcript to the given JSON file. When no path is provided the CLI generates `gpt_oss_chat_<timestamp>.json` in the current directory.
+- `/save <path>` writes the current transcript to the given JSON file. When no path is provided the CLI generates `outputs/gpt_oss_chat_<timestamp>.json`.
 - `/exit` or `/quit` ends the chat loop immediately.
 
 ## Transcript Workflow
 
 Pass `--transcript <path>` to continue from a saved conversation. The CLI loads the previous messages at startup and will overwrite the file with the latest transcript when you exit cleanly. You can also use `/save` at any point to snapshot the conversation to a different file, making it easy to collect sample transcripts (ignored by Git thanks to the `gpt_oss_chat_*.json` pattern).
+By default, new transcripts are written under the `outputs/` directory so they remain separate from source files.
 
 ## Additional Tips
 

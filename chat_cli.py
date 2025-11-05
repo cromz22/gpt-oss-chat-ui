@@ -15,6 +15,12 @@ Type your message and press Enter.
 Commands: /reset, /system <text>, /save <path>, /exit
 """
 
+def ensure_parent_dir(path: str) -> None:
+    """Create the parent directory for path if it does not exist."""
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
 def respond_via_chat(client: OpenAI, model: str, messages: list[dict]) -> str:
     """Single assistant turn via Chat Completions API (non-streaming)."""
     resp = client.chat.completions.create(model=model, messages=messages)
@@ -96,9 +102,13 @@ def main():
             print("System prompt updated.")
             continue
         if user.startswith("/save"):
-            path = user[len("/save"):].strip() or f"gpt_oss_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            path = user[len("/save"):].strip()
+            if not path:
+                filename = f"gpt_oss_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                path = os.path.join("outputs", filename)
             try:
                 payload = {"model": args.model, "messages": messages}
+                ensure_parent_dir(path)
                 with open(path, "w", encoding="utf-8") as f:
                     json.dump(payload, f, ensure_ascii=False, indent=2)
                 print(f"Saved transcript to {path}")
@@ -122,6 +132,7 @@ def main():
 
     if args.transcript:
         try:
+            ensure_parent_dir(args.transcript)
             with open(args.transcript, "w", encoding="utf-8") as f:
                 json.dump({"model": args.model, "messages": messages}, f, ensure_ascii=False, indent=2)
             print(f"Wrote transcript to {args.transcript}")
