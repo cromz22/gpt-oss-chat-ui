@@ -15,28 +15,12 @@ Type your message and press Enter.
 Commands: /reset, /system <text>, /save <path>, /exit
 """
 
-def stream_chat(client: OpenAI, model: str, messages: list[dict], stream: bool) -> str:
-    """One assistant turn via Chat Completions. If stream=False, prints once at end."""
-    if stream:
-        # NOTE: Streaming can cause Harmony parser errors on vLLM today (see --no-stream).
-        content = []
-        try:
-            for chunk in client.chat.completions.create(
-                model=model, messages=messages, stream=True
-            ):
-                delta = getattr(chunk.choices[0], "delta", None)
-                if delta and (tok := (delta.content or "")):
-                    sys.stdout.write(tok)
-                    sys.stdout.flush()
-                    content.append(tok)
-        finally:
-            print()
-        return "".join(content).strip()
-    else:
-        resp = client.chat.completions.create(model=model, messages=messages)
-        text = resp.choices[0].message.content or ""
-        print(text)
-        return text
+def respond_via_chat(client: OpenAI, model: str, messages: list[dict]) -> str:
+    """Single assistant turn via Chat Completions API (non-streaming)."""
+    resp = client.chat.completions.create(model=model, messages=messages)
+    text = resp.choices[0].message.content or ""
+    print(text)
+    return text
 
 def respond_via_responses(client: OpenAI, model: str, system: str | None, user_text: str) -> str:
     """Single-turn via Responses API (non-streaming). Safer with GPT-OSS on vLLM."""
@@ -56,9 +40,6 @@ def main():
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--system", default=DEFAULT_SYSTEM)
     p.add_argument("--transcript", default=None)
-    # FIX: add reliable options
-    p.add_argument("--no-stream", action="store_true",
-                   help="Disable streaming (recommended for GPT-OSS on vLLM).")
     p.add_argument("--responses", action="store_true",
                    help="Use Responses API (non-streaming).")
     args = p.parse_args()
@@ -136,7 +117,7 @@ def main():
             messages.append({"role": "assistant", "content": reply})
         else:
             messages.append({"role": "user", "content": user})
-            reply = stream_chat(client, args.model, messages, stream=not args.no_stream)
+            reply = respond_via_chat(client, args.model, messages)
             messages.append({"role": "assistant", "content": reply})
 
     if args.transcript:

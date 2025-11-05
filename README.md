@@ -17,10 +17,11 @@
 
 ## Quick Start
 
-1. Launch the CLI in chat mode:
+1. Launch the CLI in single-turn mode (Responses API):
    ```bash
    uv run chat_cli.py --responses
    ```
+2. Omit `--responses` to use the Chat Completions API with conversation memory. Replies print once the assistant finishes the turn.
 3. Use `/exit` (or `Ctrl+C`) to leave the session when you are done.
 
 ## CLI Options
@@ -29,7 +30,6 @@
 - `--model`: Choose the model to query (defaults to `VLLM_MODEL` or `openai/gpt-oss-120b`).
 - `--system`: Provide the initial system prompt. When `--responses` is disabled, the prompt is sent as the first chat message.
 - `--transcript`: Load an existing JSON transcript before chatting and write the updated transcript on exit.
-- `--no-stream`: Disable incremental output and print the assistant reply only after the turn completes.
 - `--responses`: Route requests through the Responses API for safer, non-streaming single-turn interactions.
 
 ## In-Session Commands
@@ -49,3 +49,4 @@ Pass `--transcript <path>` to continue from a saved conversation. The CLI loads 
 
 - `uv run python main.py` invokes the minimal packaging entry point to sanity-check distribution metadata.
 - Run `uv run python -m compileall chat_cli.py` before publishing to catch syntax regressions.
+- Streaming output is currently disabled; the CLI always prints once vLLM returns the full response.
